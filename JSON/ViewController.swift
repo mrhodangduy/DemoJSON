@@ -27,10 +27,20 @@ class ViewController: UIViewController {
     
     
     var mang: Array<JsonDefine> = Array<JsonDefine>()
+    var arrTemp:[[String: AnyObject]] = [[String:AnyObject]]()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(mang)
+        print(arrTemp)
+//        let user = JsonDefine(id: 1, userId: 1, title: "abcd", completed: true)
+//        let user2 = JsonDefine(id: 1, userId: 1, title: "xyz", completed: true)
+//
+//        mang.append(user)
+//        mang.append(user2)
+
         
         getJson()
         // Do any additional setup after loading the view, typically from a nib.
@@ -42,7 +52,7 @@ class ViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print(mang)
+
     }
     
     public func getJson(){
@@ -56,37 +66,36 @@ class ViewController: UIViewController {
             else
             {
                 if let content = data {
+                    var myJson:AnyObject!
                     do {
-                        let myJson = try JSONSerialization.jsonObject(with: content, options: .mutableContainers) as AnyObject
+                        myJson = try JSONSerialization.jsonObject(with: content, options: .mutableContainers) as AnyObject
                         
-                        let arrTemp = myJson as! Array<[String: AnyObject]>
-                        let count = arrTemp.count - 1
-                        
-                        for i in 0...count {
-                            
-                            let id = arrTemp[i]["id"] as! Int
-                            let userId = arrTemp[i]["userId"] as! Int
-                            let title = arrTemp[i]["title"] as! String
-                            let completed = arrTemp[i]["completed"] as! Bool
-                            
-                            let user = JsonDefine(id: id, userId: userId, title: title, completed: completed)
-                            self.mang.append(user)
-                            
-                        }
-                        
-                        print(self.mang[10].title)
                     }
                     catch
                     {
-                        
+                        print("Catch dc loi")
                     }
                     
+                    self.arrTemp = myJson as! Array<[String: AnyObject]>
+                    let count = self.arrTemp.count - 1
+                    
+                    for i in 0...count {
+                        
+                        let id = self.arrTemp[i]["id"] as! Int
+                        let userId = self.arrTemp[i]["userId"] as! Int
+                        let title = self.arrTemp[i]["title"] as! String
+                        let completed = self.arrTemp[i]["completed"] as! Bool
+                        
+                        let user = JsonDefine(id: id, userId: userId, title: title, completed: completed)
+                        self.mang.append(user)
+                        
+                        print(self.mang)
+                    }
                 }
             }
         }
         task.resume()
     }
-    
     
 }
 
